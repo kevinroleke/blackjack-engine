@@ -33,6 +33,7 @@ export interface SideBets {
   luckyLadies: boolean;
   inBet: boolean;
   MatchTheDealer: boolean;
+  twentyOnePlusThree: boolean;
 }
 
 export interface AvailableActions {
@@ -87,6 +88,7 @@ export interface SideBets {
   luckyLadies: boolean;
   inBet: boolean;
   MatchTheDealer: boolean;
+  twentyOnePlusThree: boolean;
 }
 
 export interface Rule {
@@ -121,6 +123,7 @@ export interface Player {
 export interface SideBetsFromUser {
   luckyLucky?: number;
   perfectPairs?: number;
+  twentyOnePlusThree?: number;
 }
 
 export interface State {
@@ -152,6 +155,7 @@ export interface SideBetsInfo {
   insurance?: { risk: number, win: number } //only show for user when SHOWDOWN happens
   luckyLucky?: number;
   perfectPairs?: number;
+  twentyOnePlusThree?: number;
 }
 
 export class Game {

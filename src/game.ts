@@ -440,7 +440,7 @@ export default class Game {
         let stage: State['stage'] = { name: "STAGE_DEALER_TURN" }
         //calculate when it should be stopped
         if (dealerValue.hi >= 17) {
-          if (dealerHasBusted || dealerHasBlackjack || (rules.standOnSoft17 && engine.isSoftHand(dealerCards))) {
+          if ((rules.standOnSoft17 && engine.isSoftHand(dealerCards)) || !engine.isSoftHand(dealerCards)) {
             stage = { name: "STAGE_DONE" }
           }
         }
@@ -503,7 +503,6 @@ export default class Game {
     while (!gotNextPlayer && playerId < players.length) {
       const player = players[playerId]
       for(const [handIndex, hand] of player.hands.entries()) {
-        console.log(`hand at user ${player.name}`, hand)
         if(!hand.close) {
           handId = handIndex
           gotNextPlayer = true

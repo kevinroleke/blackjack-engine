@@ -17,7 +17,7 @@ export const restore = (): Action => {
   }
 }
 
-export const bet = ({ bet = 10, playerId, sideBets = { luckyLucky: 0, perfectPairs: 0 } }: { bet: number, playerId: number, sideBets?: SideBetsFromUser }): Action => {
+export const bet = ({ bet = 10, playerId, sideBets = { luckyLucky: 0, twentyOnePlusThree: 0, perfectPairs: 0 } }: { bet: number, playerId: number, sideBets?: SideBetsFromUser }): Action => {
   return {
     type: 'BET',
     payload: {

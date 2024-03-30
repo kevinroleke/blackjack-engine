@@ -246,6 +246,85 @@ export const isLuckyLucky = (playerCards: Array<Card>, dealerCards: Array<Card>)
   return (v1 >= 19 && v1 <= 21) || (v2 >= 19 && v2 <= 21) || (v3 >= 19 && v3 <= 21) || (v4 >= 19 && v4 <= 21)
 }
 
+const isStraight = (cards: Array<Card>): boolean => {
+    const faces = [
+      'A',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      'J',
+      'Q',
+      'K'
+    ];
+
+    let indexes: number[] = [];
+    for (const card of cards) {
+        indexes.push(faces.indexOf(card.text));
+    }
+    for (let i = 0; i < indexes.length; i++) {
+        const index = indexes[i];
+        if (index == 0 && indexes.indexOf(faces.length-1) != -1) indexes[i] = faces.length;
+    }
+
+    indexes.sort((a, b) => a - b);
+
+    const ret = (indexes[0] == indexes[1] - 1) && (indexes[1] - 1 == indexes[2] - 2);
+    if (ret) console.log(cards.map(x => x.text).join(" "), "is straight")
+
+    return ret;
+}
+const isFlush = (cards: Array<Card>): boolean => {
+    const init = cards[0].suite;
+    for (const card of cards) {
+        if (card.suite != init) {
+            return false;
+        }
+    }
+
+    console.log(cards.map(x => x.suite).join(" "), "is flush");
+
+    return true;
+}
+const isTrips = (cards: Array<Card>): boolean => {
+    const init = cards[0].text;
+    for (const card of cards) {
+        if (card.text != init) {
+            return false;
+        }
+    }
+
+    console.log(cards.map(x => x.text).join(" "), "is trips");
+
+    return true;
+}
+
+export const getTwentyOnePlusThreeMultiplier = (playerCards: Array<Card>, dealerCards: Array<Card>) => {
+    const cards: Array<Card> = [playerCards[0], playerCards[1], dealerCards[0]];
+    if (isFlush(cards) && isTrips(cards)) {
+        return 100;
+    } else if (isFlush(cards) && isStraight(cards)) {
+        return 40;
+    } else if (isTrips(cards)) {
+        return 25;
+    } else if (isStraight(cards)) {
+        return 10;
+    } else if (isFlush(cards)) {
+        return 5;
+    } else {
+        return 0;
+    }
+}
+
+export const isTwentyOnePlusThree = (playerCards: Array<Card>, dealerCards: Array<Card>) => {
+    return getTwentyOnePlusThreeMultiplier(playerCards, dealerCards) > 0;
+}
+
 /// According to the luckyLucky table (which needs the flat and same suite cards) returns back its multiplier
 export const getLuckyLuckyMultiplier = (playerCards: Array<Card>, dealerCards: Array<Card>) => {
   const cards: Array<Card> = [...playerCards, ...dealerCards]
@@ -263,7 +342,8 @@ export const isPerfectPairs = (playerCards: Array<Card>): boolean => playerCards
 export const getSideBetsInfo = (availableBets: SideBets, sideBets: SideBetsFromUser, playerCards: Array<Card>, dealerCards: Array<Card>): SideBetsFromUser => {
   const sideBetsInfo = {
     luckyLucky: 0,
-    perfectPairs: 0
+    perfectPairs: 0,
+    twentyOnePlusThree: 0,
   }
   if (availableBets.luckyLucky && sideBets.luckyLucky && isLuckyLucky(playerCards, dealerCards)) {
     const multiplier = getLuckyLuckyMultiplier(playerCards, dealerCards)
@@ -273,6 +353,11 @@ export const getSideBetsInfo = (availableBets: SideBets, sideBets: SideBetsFromU
     // TODO: impl colored pairs
     // TODO: impl mixed pairs
     sideBetsInfo.perfectPairs = sideBets.perfectPairs * 5
+  }
+  console.log(availableBets.twentyOnePlusThree, sideBets.twentyOnePlusThree);
+  if (availableBets.twentyOnePlusThree && sideBets.twentyOnePlusThree && isTwentyOnePlusThree(playerCards, dealerCards)) {
+    const multiplier = getTwentyOnePlusThreeMultiplier(playerCards, dealerCards)
+    sideBetsInfo.twentyOnePlusThree = sideBets.twentyOnePlusThree * multiplier
   }
   return sideBetsInfo
 }

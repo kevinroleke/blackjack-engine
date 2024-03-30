@@ -8,7 +8,8 @@ export const getDefaultSideBets = (active: boolean = true) : SideBets => {
     royalMatch: active,
     luckyLadies: active,
     inBet: active,
-    MatchTheDealer: active
+    MatchTheDealer: active,
+    twentyOnePlusThree: active,
   }
 }
 
@@ -32,8 +33,8 @@ export const defaultPlayer = (name = "player-0"): Player => {
     initialBet: 0,
     finalBet: 0,
     finalWin: 0,
-    sideBetsFromUser: {luckyLucky: 0, perfectPairs: 0},
-    sideBetWins: {luckyLucky: 0, perfectPairs: 0},
+    sideBetsFromUser: {luckyLucky: 0, twentyOnePlusThree: 0, perfectPairs: 0},
+    sideBetWins: {luckyLucky: 0, twentyOnePlusThree: 0, perfectPairs: 0},
     hands: []
   }
 }
