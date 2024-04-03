@@ -257,13 +257,14 @@ export default class Game {
         const showdownAfterAceSplit = rules.showdownAfterAceSplit && newHandCards[ 0 ].value === 1
 
         //check we have hit split limit
-        splitHand = this.enforceRules(engine.getHandInfoAfterSplit(splitHandCards, dealerCards, initialBet))
-        let newHand = this.enforceRules(engine.getHandInfoAfterSplit(newHandCards, dealerCards, initialBet))
+        const max = hands.length >= rules.maxHandNumber-1;
+        splitHand = this.enforceRules(engine.getHandInfoAfterSplit(splitHandCards, dealerCards, initialBet, max))
+        let newHand = this.enforceRules(engine.getHandInfoAfterSplit(newHandCards, dealerCards, initialBet, max))
 
+        splitHandCards.push(this._drawCard())
+        newHandCards.push(this._drawCard())
         if (showdownAfterAceSplit) {
           //draw one-one more cards then finish player's turn
-          splitHandCards.push(this._drawCard())
-          newHandCards.push(this._drawCard())
           splitHand = this.enforceRules(engine.getHandInfoAfterAceSplit(splitHandCards, dealerCards, initialBet))
           newHand = this.enforceRules(engine.getHandInfoAfterAceSplit(newHandCards, dealerCards, initialBet))
         }

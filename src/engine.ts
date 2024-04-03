@@ -144,12 +144,20 @@ export const getHandInfoAfterDeal = (playerCards: Array<Card>, dealerCards: Arra
   }
 }
 
-export const getHandInfoAfterSplit = (playerCards: Array<Card>, dealerCards: Array<Card>, initialBet: number): Hand => {
+export const getHandInfoAfterSplit = (playerCards: Array<Card>, dealerCards: Array<Card>, initialBet: number, max: boolean): Hand => {
   const hand = getHandInfoInit(playerCards, dealerCards, true)
   const availableActions = hand.availableActions
+  const handValue = calculate(playerCards)
+  if (!handValue) {
+    throw Error(`${playerCards} cards don't have value`)
+  }
+  const hasBlackjack = isBlackjack(playerCards);
+  const hasBusted = checkForBusted(handValue)
+  const isClosed = hasBusted || hasBlackjack || handValue.hi === 21
+  const canSplit = playerCards.length > 1 && playerCards[ 0 ].value === playerCards[ 1 ].value && !isClosed && !max;
   hand.availableActions = {
     ...availableActions,
-    split: false,
+    split: canSplit,
     double: !hand.close && (playerCards.length === 2),
     insurance: false,
     surrender: false
